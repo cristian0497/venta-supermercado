@@ -1,6 +1,7 @@
 package com.uniminuto;
 
 import com.uniminuto.service.Service;
+import com.uniminuto.view.MainView;
 
 import javax.swing.JFrame;
 import java.util.Scanner;
@@ -13,6 +14,10 @@ import static java.lang.System.out;
 public class Main extends JFrame {
 
     public static void main(String[] args) {
+        MainView view = new MainView();
+        view.setVisible(true);
+
+        /**
         Scanner input = new Scanner(System.in);
         Service service = new Service();
         boolean run = true;
@@ -41,5 +46,6 @@ public class Main extends JFrame {
             }
         } while (run);
         out.println("Hasta Pronto");
+         */
     }
 }

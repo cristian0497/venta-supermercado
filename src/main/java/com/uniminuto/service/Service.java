@@ -20,10 +20,9 @@ public class Service {
      * por un cliente
      * @return boolean menu principal
      */
-    public boolean nuevaCompra() {
+    public Compra nuevaCompra( Cliente cliente) {
         Compra nuevaCompra = new Compra();
 
-        out.println("productos:");
         dbMock.productos.forEach( product ->
             out.println("id: {id} producto: {producto} precio: ${precio} oferta: {oferta}"
                     .replace("{id}", product.getId().toString())
@@ -32,60 +31,13 @@ public class Service {
                     .replace("{oferta}", Objects.isNull(product.getOferta())? "no": product.getOferta().getOferta()))
         );
 
-        Cliente cliente = new Cliente();
-        out.println("\ningrese documento del cliente:");
-        cliente.setDocumento( input.nextLine() );
-
-        out.println("\ningrese nombre del cliente:");
-        cliente.setDocumento( input.nextLine() );
-
-        out.println("\ningrese teléfono del cliente:");
-        cliente.setTelefono( input.nextLine() );
-
-        out.println("\ningrese email del cliente:");
-        cliente.setEmail( input.nextLine() );
-
         nuevaCompra.setCliente( cliente );
         out.println("\ncliente creado correctamente " +
                 "\nagregar id de producto" +
                 "\npress: \"q\" para salir"
         );
 
-        boolean finish = false;
-        boolean payment = false;
-        do {
-            String id = input.nextLine();
-            if(Objects.equals(id, "q") || Objects.equals(id, "m")) {
-                finish = true;
-
-            } else if (Objects.equals(id, "p")) {
-                finish = payment = true;
-
-            } else {
-                Optional<Producto> found = dbMock.productos.stream()
-                        .filter(p -> Objects.equals(p.getId().toString(), id))
-                        .findAny();
-
-                if (found.isEmpty())
-                    out.println("\tProducto no encontrado");
-                else {
-                    found.get().setCantidad(1);
-                    nuevaCompra.agregarProducto(found.get());
-                }
-
-                out.println("agregar id de producto" +
-                        "\tpress: \"q\" para salir" +
-                        "\tpress: \"p\" para proceder pago"
-                );
-            }
-
-        } while (!finish);
-
-        if(payment) {
-            out.println( nuevaCompra.procesarPago() );
-            out.println( nuevaCompra.enviarFacturaEmail() );
-        }
-        return finish;
+        return nuevaCompra;
     }
 
     /**
