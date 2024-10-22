@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.Currency;
+import java.util.Locale;
 
 @Getter @Setter
 public class Producto implements Serializable {
@@ -24,6 +27,19 @@ public class Producto implements Serializable {
         this.nombre = producto;
         this.precio = precio;
         this.oferta = oferta;
+        this.cantidad = 1;
     }
     public Producto() { }
+
+    @Override
+    public String toString() {
+        Locale locale = new Locale("es", "CO");
+        Currency cop = Currency.getInstance("COP");
+        NumberFormat copFormat = NumberFormat.getNumberInstance(locale);
+        copFormat.setCurrency(cop);
+        return this.nombre+": $"+
+                copFormat.format(this.precio)+
+                ": Off: ".concat(this.oferta != null ? this.oferta.getPorcentaje().toString() : "0")+"%";
+
+    }
 }

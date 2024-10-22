@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5d119c1-c557-46b5-a069-2c7f867dbead" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/uniminuto/view/MainView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/uniminuto/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/uniminuto/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/uniminuto/models/Compra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/uniminuto/models/Compra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/uniminuto/models/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/uniminuto/models/Producto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/uniminuto/service/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/uniminuto/service/Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/uniminuto/view/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/uniminuto/view/MainView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +75,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Gradle.calculadora-supermercado [:com.uniminuto.Main.main()].executor": "Debug",
+    "Gradle.calculadora-supermercado [:com.uniminuto.Main.main()].executor": "Run",
     "Gradle.untitled [build].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -146,16 +148,5 @@
       <updated>1728318607056</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/uniminuto/view/MainView.java</url>
-          <line>130</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

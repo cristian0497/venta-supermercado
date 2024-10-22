@@ -7,42 +7,48 @@ import com.uniminuto.models.Producto;
 import com.uniminuto.service.Service;
 
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Vector;
 
-public class MainView extends JFrame implements ActionListener {
+public class MainView extends JFrame implements ActionListener, ListSelectionListener {
+    // Config inicial y servicios
+    Service service = new Service();
+    Mocks dbMock = new Mocks();
+    Compra carrito;
 
+    // Form de usuario
     final JTextArea textoNombre = new JTextArea("Nombre cliente");
     final JTextField nombreCliente;
-
     final JTextArea textoTelefono = new JTextArea("Teléfono");
     final JTextField telefonoCliente;
-
     final JTextArea textoEmail = new JTextArea("Email");
     final JTextField emailCliente;
-
     final JTextArea textoDocumento = new JTextArea("Documento");
     final JTextField documentoCliente;
 
-    final JTextArea textoProductos = new JTextArea("Productos disponibles");
-    final JList<Producto> products;
-
-    final JTextArea textoProductosUsuario = new JTextArea("Tus productos");
-    final JList<Producto> productosUsuario;
-
+    // ---
     JButton registrarCliente;
     JButton agregarProductos;
     JButton agregarOfertas;
 
-    Service service;
-    Mocks dbMock = new Mocks();
+    final JTextArea textoProductos = new JTextArea("Productos disponibles");
+    final DefaultListModel<Producto> productos;
+    JScrollPane listPane;
+
+    final JTextArea textoProductosUsuario = new JTextArea("Tus productos");
+    final DefaultListModel<Producto> productosUsuario;
+    JScrollPane listPaneUsuario;
+    JList<Producto> cart;
+
+    final JTextArea resumenTotal;
+    final JTextArea resumenDescuento;
+    final JTextArea resumenAPagar;
+    JButton pagar;
 
     public MainView() {
-        service = new Service();
-
         this.setTitle("Caja de ventas");
         this.setSize(640, 480);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,8 +61,11 @@ public class MainView extends JFrame implements ActionListener {
         registrarCliente = new JButton("Registrar cliente");
         agregarProductos = new JButton("Agregar productos");
         agregarOfertas = new JButton("Agregar ofertas");
-        products = new JList<>( );
-        productosUsuario = new JList<>();
+        productos = new DefaultListModel<>( );
+        productosUsuario = new DefaultListModel<>();
+        resumenTotal = new JTextArea("Total productos: $0");
+        resumenDescuento = new JTextArea("Descuento: $0");
+        resumenAPagar = new JTextArea("Total a pagar: $0");
 
         // Info de cliente //
         textoNombre.setBounds(10, 10, 300, 15); // 25
@@ -78,11 +87,6 @@ public class MainView extends JFrame implements ActionListener {
         agregarProductos.addActionListener(this);
         agregarOfertas.setBounds(400, 90, 150, 30);
         agregarOfertas.addActionListener(this);
-
-        // lista productos disponibles //
-        products.setVisible(false);
-        products.setBounds(10, 10, 300, 500);
-
 
         this.textoNombre.setEditable(false);
         this.textoNombre.setBackground(null);
@@ -107,7 +111,6 @@ public class MainView extends JFrame implements ActionListener {
         this.add(registrarCliente);
         this.add(agregarProductos);
         this.add(agregarOfertas);
-        this.add(products);
     }
 
     @Override
@@ -127,10 +130,32 @@ public class MainView extends JFrame implements ActionListener {
                 this.agregarProductos.setVisible(false);
                 this.agregarOfertas.setVisible(false);
 
-                Compra carrito = service.nuevaCompra(cliente);
-                Producto[] prods = dbMock.productos.toArray(new Producto[0] );
-                products.setListData(prods);
-                products.setVisible(true);
+                carrito = service.nuevaCompra(cliente);
+                dbMock.productos.forEach(productos::addElement);
+
+                this.textoProductos.setBounds(10, 10, 300, 15);
+                this.textoProductos.setBackground(null);
+                JList<Producto> listaProductosStock = new JList<>(productos);
+                listaProductosStock.addListSelectionListener(this);
+                this.listPane = new JScrollPane(listaProductosStock);
+                this.listPane.setBounds(10, 25, 300, 400);
+                this.add(listPane);
+                this.add(textoProductos);
+
+                this.textoProductosUsuario.setBounds(320, 10, 300, 15);
+                this.textoProductosUsuario.setBackground(null);
+                this.cart = new JList<>(productosUsuario);
+                this.listPaneUsuario = new JScrollPane(cart);
+                this.listPaneUsuario.setBounds(320, 25, 300, 300);
+                this.add(listPaneUsuario);
+                this.add(textoProductosUsuario);
+
+                this.resumenTotal.setBounds(320, 350, 300, 15);
+                this.resumenDescuento.setBounds(320, 370, 300, 15);
+                this.resumenAPagar.setBounds(320, 390, 300, 15);
+                this.add(this.resumenTotal);
+                this.add(this.resumenDescuento);
+                this.add(this.resumenAPagar);
 
             } catch (IOException ioException) {
                 JOptionPane.showMessageDialog(null, "Datos incompletos: "+ioException.getMessage());
@@ -162,5 +187,19 @@ public class MainView extends JFrame implements ActionListener {
         cliente.setEmail( this.emailCliente.getText() );
 
         return cliente;
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent listSelectionEvent) {
+        if(listSelectionEvent.getValueIsAdjusting()) {
+            Producto selected = dbMock.productos.get(listSelectionEvent.getLastIndex());
+            this.carrito.agregarProducto(selected);
+            productosUsuario.addElement(selected);
+            this.carrito.calcularTotales();
+            this.resumenTotal.setText("Total productos: $"+this.carrito.getValorTotal() );
+            this.resumenDescuento.setText("Descuento: $"+this.carrito.getValorDescuento() );
+            this.resumenAPagar.setText("Total a pagar: $"+this.carrito.getValorAPagar() );
+        }
+
     }
 }
